@@ -6,10 +6,19 @@ const { db, auth } = require('./config/firebaseConfig');
 
 dotenv.config();
 
+  const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173"; // Default for Vite dev
+
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+  // More specific CORS configuration
+  app.use(cors({
+    origin: FRONTEND_URL, // Allow only your frontend to connect
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Specify allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+    credentials: true // If you need to handle cookies or authorization headers from client
+  }));
+
 app.use(express.json());
 
 app.get('/', (req, res) => {

@@ -40,6 +40,9 @@ const registerUser = async (req, res) => {
     // Set custom claim for role-based access if needed (optional)
     // await auth.setCustomUserClaims(userRecord.uid, { role });
 
+    // Log successful registration attempt before sending email for easier debugging
+    console.log(`User registration initiated for email: ${email}, role: ${role}, name: ${name}`);
+
     const token = generateToken(userRecord.uid);
 
     res.status(201).json({
@@ -60,7 +63,10 @@ const registerUser = async (req, res) => {
         ).catch(err => console.error("Failed to send welcome email:", err)); // Catch specific email error
       }
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error(`Error registering user [${email}]:`, error.message);
+    console.error("Full error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    // Avoid logging req.body directly if it contains raw password, but log parts of it if safe.
+    console.error("Request body (structure check - name, email, role):", { name: req.body.name, email: req.body.email, role: req.body.role });
     // Provide more specific error messages based on Firebase error codes
     if (error.code === 'auth/email-already-exists') {
       return res.status(400).json({ message: 'Email already in use.' });

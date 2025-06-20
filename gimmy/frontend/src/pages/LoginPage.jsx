@@ -87,13 +87,8 @@ export default function LoginPage() {
             >
               {loading && !googleLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In as Trainee'}
             </Button>
-            <Button
-              onClick={() => handleLoginAttempt(true)} fullWidth variant="outlined"
-              sx={{ mb: 2 }} disabled={loading || googleLoading}
-            >
-              {loading && !googleLoading ? <CircularProgress size={24} /> : 'Login as Trainer'}
-            </Button>
             <Divider sx={{ my: 2 }}>OR</Divider>
+            {/* GoogleLogin Button */}
             <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}>
               {googleLoading ? <CircularProgress /> :
                 <GoogleLogin
@@ -108,6 +103,14 @@ export default function LoginPage() {
                 />
               }
             </Box>
+            {/* Trainer Login Button - Moved below Google Sign In */}
+            <Button
+              onClick={() => handleLoginAttempt(true)} fullWidth variant="outlined"
+              sx={{ mb: 2 }} disabled={loading || googleLoading}
+            >
+              {loading && !googleLoading ? <CircularProgress size={24} /> : 'Login as Trainer'}
+            </Button>
+
             <Grid container justifyContent="flex-end">
                 <Grid item>
                     <Link component={RouterLink} to="/register" variant="body2">

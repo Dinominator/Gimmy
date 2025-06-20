@@ -109,7 +109,7 @@ export default function RegisterPage() {
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 1 }} disabled={loading || googleLoading}>
-              {loading && !googleLoading ? <CircularProgress size={24} color="inherit"/> : 'Sign Up as Trainee'}
+              {loading && !googleLoading ? <CircularProgress size={24} color="inherit"/> : 'Sign Up'}
             </Button>
             <Divider sx={{ my: 2 }}>OR</Divider>
             <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}>

@@ -83,8 +83,20 @@ export const AuthProvider = ({ children }) => {
           axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
           return newUserData;
       } catch (error) {
-          console.error('Registration failed:', error.response?.data?.message || error.message);
-          throw error;
+        console.error('Registration failed in AuthContext:', error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Registration Error - Response Data:', error.response.data);
+          console.error('Registration Error - Response Status:', error.response.status);
+        } else if (error.request) {
+          // The request was made but no response was received (Network Error)
+          console.error('Registration Error - No response received (Likely Network Error):', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Registration Error - Request setup issue:', error.message);
+        }
+        throw error; // Re-throw to be caught by the UI component
       }
   };
 

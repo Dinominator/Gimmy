@@ -34,12 +34,20 @@ const ProtectedRoute = ({ children, roles }) => {
 // Layout components (optional, but good for structure)
 import Navbar from './components/layout/Navbar'; // Import Navbar
 
+import { Container, Box } from '@mui/material'; // Import Container and Box
+
 const MainLayout = ({ children }) => (
-  <div>
+  <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
     <Navbar />
-    <main>{children}</main>
-    {/* <footer>Footer Content Here</footer> You can add a footer component later */}
-  </div>
+    <Container component="main" sx={{ flexGrow: 1, py: { xs: 2, sm: 3 } /* Responsive padding */ }} maxWidth={false}> {/* Use full width */}
+      {children}
+    </Container>
+    <Box component="footer" sx={{ py: 2, textAlign: 'center', backgroundColor: 'background.paper', borderTop: (theme) => `1px solid ${theme.palette.divider}` }}>
+      <Typography variant="body2" color="text.secondary">
+        © {new Date().getFullYear()} Gimmy Fitness App
+      </Typography>
+    </Box>
+  </Box>
 );
 
 

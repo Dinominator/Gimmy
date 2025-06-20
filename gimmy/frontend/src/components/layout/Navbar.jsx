@@ -84,7 +84,10 @@ const Navbar = () => {
         <GimmyLogo size="h6" />
         <Box sx={{ flexGrow: 1 }} /> {/* Spacer */}
 
-        <Button color="inherit" component={RouterLink} to="/exercises">All Exercises</Button>
+        {/* "All Exercises" button visible only if authenticated */}
+        {isAuthenticated && (
+          <Button color="inherit" component={RouterLink} to="/exercises">All Exercises</Button>
+        )}
 
         {isAuthenticated ? (
           <>
