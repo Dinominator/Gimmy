@@ -74,12 +74,11 @@ const registerUser = async (req, res) => {
 
 // Login user with email and password
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, attemptTrainerLogin } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Please provide email and password' });
   }
-
   try {
     // Firebase Admin SDK does not directly handle password verification for login.
     // Client SDK handles this. For backend, we'd typically verify an ID token sent from client.
@@ -106,6 +105,11 @@ const loginUser = async (req, res) => {
         return res.status(404).json({ message: 'User data not found in Firestore.' });
     }
     const userData = userDoc.data();
+
+    if (attemptTrainerLogin && userData.role !== 'trainer') {
+      // User explicitly tried to log in as a trainer, but their role is not 'trainer'.
+      return res.status(403).json({ message: 'Access Denied. You do not have trainer privileges.' });
+    }
 
     const token = generateToken(userRecord.uid);
 

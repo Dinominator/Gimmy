@@ -32,7 +32,15 @@ const ProtectedRoute = ({ children, roles }) => {
 };
 
 // Layout components (optional, but good for structure)
-const MainLayout = ({ children }) => <div><header>Gimmy App</header><main>{children}</main><footer>Footer</footer></div>;
+import Navbar from './components/layout/Navbar'; // Import Navbar
+
+const MainLayout = ({ children }) => (
+  <div>
+    <Navbar />
+    <main>{children}</main>
+    {/* <footer>Footer Content Here</footer> You can add a footer component later */}
+  </div>
+);
 
 
 function App() {

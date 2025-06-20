@@ -40,9 +40,9 @@ export const AuthProvider = ({ children }) => {
     fetchUserProfile();
   }, [token]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, asTrainer = false) => {
     try {
-      const response = await axios.post('/auth/login', { email, password });
+      const response = await axios.post('/auth/login', { email, password, attemptTrainerLogin: asTrainer });
       const { token: newToken, ...userData } = response.data;
       localStorage.setItem('gimmyToken', newToken);
       setToken(newToken);

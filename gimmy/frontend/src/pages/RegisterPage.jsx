@@ -2,24 +2,23 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, Link, Grid, Box, Typography, Container, CircularProgress } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, CircularProgress, Paper, Divider, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin component
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function RegisterPage() {
-  const { register, googleLogin: appGoogleLogin } = useAuth(); // Renamed to avoid conflict
+  const { register, googleLogin: appGoogleLogin } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'trainee',
+    // role: 'trainee', // Role is fixed to trainee
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -38,8 +37,15 @@ export default function RegisterPage() {
     }
     setLoading(true);
     try {
-      const userData = await register({ name: formData.name, email: formData.email, password: formData.password, role: formData.role });
-      navigate(userData.role === 'trainer' ? '/trainer/dashboard' : '/trainee/dashboard');
+      const registrationData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: 'trainee' // Always register as trainee
+      };
+      const userData = await register(registrationData);
+      // Assuming role will be 'trainee', navigate to trainee dashboard
+      navigate('/trainee/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
     } finally {
@@ -51,9 +57,9 @@ export default function RegisterPage() {
     setGoogleLoading(true);
     setError('');
     try {
-      // tokenResponse.credential IS the ID token when using <GoogleLogin /> component
-      await appGoogleLogin(tokenResponse.credential, formData.role);
-      navigate(formData.role === 'trainer' ? '/trainer/dashboard' : '/trainee/dashboard');
+      await appGoogleLogin(tokenResponse.credential, 'trainee');
+      // Assuming role will be 'trainee', navigate to trainee dashboard
+      navigate('/trainee/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Google Sign-Up failed.');
     } finally {
@@ -67,56 +73,68 @@ export default function RegisterPage() {
     setGoogleLoading(false);
   };
 
-
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}><LockOutlinedIcon /></Avatar>
-        <Typography component="h1" variant="h5">Sign up</Typography>
-        {error && <Typography color="error" sx={{ mt: 1 }}>{error}</Typography>}
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}><TextField fullWidth label="Full Name" name="name" required autoComplete="name" autoFocus value={formData.name} onChange={handleChange} disabled={loading || googleLoading} /></Grid>
-            <Grid item xs={12}><TextField fullWidth label="Email Address" name="email" type="email" required autoComplete="email" value={formData.email} onChange={handleChange} disabled={loading || googleLoading} /></Grid>
-            <Grid item xs={12}><TextField fullWidth label="Password" name="password" type="password" required value={formData.password} onChange={handleChange} disabled={loading || googleLoading} /></Grid>
-            <Grid item xs={12}><TextField fullWidth label="Confirm Password" name="confirmPassword" type="password" required value={formData.confirmPassword} onChange={handleChange} disabled={loading || googleLoading} /></Grid>
-            <Grid item xs={12}>
-              <FormControl component="fieldset" disabled={loading || googleLoading}>
-                <FormLabel component="legend">Register as:</FormLabel>
-                <RadioGroup row name="role" value={formData.role} onChange={handleChange}>
-                  <FormControlLabel value="trainee" control={<Radio />} label="Trainee" />
-                  <FormControlLabel value="trainer" control={<Radio />} label="Trainer" />
-                </RadioGroup>
-              </FormControl>
+      {/* CssBaseline is now in main.jsx */}
+      <Box
+        sx={{
+          minHeight: 'calc(100vh - 180px)', // Adjust for Navbar/Footer
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper elevation={3} sx={{ p: {xs: 2, sm: 3, md: 4}, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5" sx={{mb: 2}}>
+            Sign up
+          </Typography>
+          {error && <Alert severity="error" sx={{ width: '100%', mb:2 }}>{error}</Alert>}
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Full Name" name="name" required autoComplete="name" autoFocus value={formData.name} onChange={handleChange} disabled={loading || googleLoading} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Email Address" name="email" type="email" required autoComplete="email" value={formData.email} onChange={handleChange} disabled={loading || googleLoading} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Password" name="password" type="password" required autoComplete="new-password" value={formData.password} onChange={handleChange} disabled={loading || googleLoading} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Confirm Password" name="confirmPassword" type="password" required autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} disabled={loading || googleLoading} />
+              </Grid>
             </Grid>
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 1 }} disabled={loading || googleLoading}>
-            {loading ? <CircularProgress size={24} /> : 'Sign Up'}
-          </Button>
-
-          {/* GoogleLogin Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}>
-            {googleLoading ? <CircularProgress /> :
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                useOneTap // Optional: for one-tap sign-in experience
-                // width="364px" // Adjust width as needed or let it be default
-                shape="rectangular" // rectangular, circle, pill
-                theme="outline" // outline, filled_blue, filled_black
-                logo_alignment="left" // left, center
-                text="signup_with" // signup_with, signin_with, continue_with
-              />
-            }
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 1 }} disabled={loading || googleLoading}>
+              {loading && !googleLoading ? <CircularProgress size={24} color="inherit"/> : 'Sign Up as Trainee'}
+            </Button>
+            <Divider sx={{ my: 2 }}>OR</Divider>
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}>
+              {googleLoading ? <CircularProgress /> :
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  useOneTap
+                  shape="rectangular"
+                  theme="outline"
+                  logo_alignment="left"
+                  text="signup_with"
+                  width="100%"
+                />
+              }
+            </Box>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link component={RouterLink} to="/login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
-
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link component={RouterLink} to="/login" variant="body2">Already have an account? Sign in</Link>
-            </Grid>
-          </Grid>
-        </Box>
+        </Paper>
       </Box>
     </Container>
   );

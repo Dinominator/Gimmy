@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
   } else {
     res.send('Gimmy Backend API is running! Firebase Admin SDK NOT initialized. Check gimmy/backend/config/serviceAccountKey.json and logs.');
   }
-});
+  });
 
 // Auth routes
 const authRoutes = require('./routes/authRoutes');
