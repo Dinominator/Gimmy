@@ -1,26 +1,24 @@
 // src/theme.js
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors'; // Example for error color
 
-// Google Inspired Colors (example, can be refined)
-const PRIMARY_COLOR = '#1a73e8'; // Google Blue
-const SECONDARY_COLOR = '#ff6e00'; // Example: Google Orange/Amber as accent
-const BACKGROUND_DEFAULT = '#f8f9fa'; // Very light grey, common in Google UIs
-const BACKGROUND_PAPER = '#ffffff'; // White for cards, modals, etc.
-const TEXT_PRIMARY = 'rgba(0, 0, 0, 0.87)'; // Standard dark text
-const TEXT_SECONDARY = 'rgba(0, 0, 0, 0.6)';
-const BORDER_RADIUS = 8; // Slightly more rounded corners
+// Suggested Modern Palette
+const PRIMARY_MAIN = '#0A7366'; // A deep teal/green - energizing yet professional
+const SECONDARY_MAIN = '#FF6B6B'; // A vibrant coral/red - for accents and calls to action
+const BACKGROUND_DEFAULT = '#F8F9FA'; // Very light, almost white grey - for overall background
+const BACKGROUND_PAPER = '#FFFFFF'; // Pure white for cards, modals, etc.
+const TEXT_PRIMARY = '#1A2027';     // Dark grey, almost black - for primary text
+const TEXT_SECONDARY = '#4A5568';   // Medium grey - for secondary text
+const BORDER_RADIUS_VALUE = 12;      // Modern rounded corners
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: PRIMARY_COLOR,
+      main: PRIMARY_MAIN,
+      // contrastText: '#FFFFFF', // Auto-calculated, but can be specified
     },
     secondary: {
-      main: SECONDARY_COLOR,
-    },
-    error: {
-      main: red.A400,
+      main: SECONDARY_MAIN,
+      // contrastText: '#FFFFFF',
     },
     background: {
       default: BACKGROUND_DEFAULT,
@@ -29,120 +27,208 @@ const theme = createTheme({
     text: {
       primary: TEXT_PRIMARY,
       secondary: TEXT_SECONDARY,
+    },
+    action: { // Define hover and selected states for better interactivity
+        hover: 'rgba(0, 0, 0, 0.06)', // Light hover for list items, buttons
+        selected: 'rgba(0, 0, 0, 0.08)',
     }
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontSize: '2.2rem', fontWeight: 500, letterSpacing: '-0.5px' },
-    h2: { fontSize: '1.8rem', fontWeight: 500, letterSpacing: '-0.25px' },
-    h3: { fontSize: '1.5rem', fontWeight: 500 },
-    h4: { fontSize: '1.3rem', fontWeight: 500 },
-    h5: { fontSize: '1.15rem', fontWeight: 500 }, // Used for Sign In/Up titles
-    h6: { fontSize: '1rem', fontWeight: 500 },    // Used for Logo
-    subtitle1: { fontSize: '1rem', fontWeight: 400 },
-    subtitle2: { fontSize: '0.875rem', fontWeight: 500 },
-    body1: { fontSize: '1rem', fontWeight: 400 },
-    body2: { fontSize: '0.875rem', fontWeight: 400 },
-    button: { textTransform: 'none', fontWeight: 500 }, // Buttons with normal casing
+    fontFamily: [
+      'Inter', // Attempt to use Inter
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif'
+    ].join(','),
+    h1: { fontSize: '2.5rem', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.5px' }, // Page titles
+    h2: { fontSize: '2rem', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.25px' }, // Section titles
+    h3: { fontSize: '1.75rem', fontWeight: 600, lineHeight: 1.3 },
+    h4: { fontSize: '1.5rem', fontWeight: 600, lineHeight: 1.3 },       // Card titles, important headings
+    h5: { fontSize: '1.25rem', fontWeight: 600, lineHeight: 1.4 },      // Smaller headings
+    h6: { fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.4 },       // Sub-headings, logo
+    subtitle1: { fontSize: '1rem', fontWeight: 500, color: TEXT_PRIMARY },
+    subtitle2: { fontSize: '0.875rem', fontWeight: 500, color: TEXT_SECONDARY },
+    body1: { fontSize: '1rem', fontWeight: 400, lineHeight: 1.6, color: TEXT_PRIMARY },
+    body2: { fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.5, color: TEXT_SECONDARY },
+    button: {
+        textTransform: 'none',
+        fontWeight: 600,
+        fontSize: '0.9rem',
+        letterSpacing: '0.5px',
+    },
+    caption: { fontSize: '0.75rem', color: TEXT_SECONDARY },
   },
   shape: {
-    borderRadius: BORDER_RADIUS,
+    borderRadius: BORDER_RADIUS_VALUE,
   },
   components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: BACKGROUND_PAPER, // Lighter AppBar, more modern
-          color: TEXT_PRIMARY, // Dark text on light AppBar
-          boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)', // Softer shadow
-        }
-      }
+    MuiCssBaseline: { // To ensure Inter font is applied globally if available via CDN
+        styleOverrides: `
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            body {
+                font-family: 'Inter', 'Roboto', sans-serif;
+            }
+        `
     },
-    MuiButton: {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0, // Flatter AppBar
+      },
       styleOverrides: {
         root: {
-          borderRadius: BORDER_RADIUS,
-          // textTransform: 'none', // Already in typography.button
-        },
-        containedPrimary: {
-          // Example: if you want specific button styling
+          backgroundColor: BACKGROUND_PAPER, // Light AppBar
+          color: TEXT_PRIMARY,
+          borderBottom: `1px solid rgba(0, 0, 0, 0.12)`, // Subtle border
         },
       },
     },
-    MuiCard: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true, // Flatter buttons by default
+      },
       styleOverrides: {
         root: {
-          borderRadius: BORDER_RADIUS,
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)', // Softer card shadow
+          borderRadius: BORDER_RADIUS_VALUE - 4, // Slightly less rounded than cards for differentiation
+          padding: '8px 20px', // More padding
+        },
+        containedPrimary: {
+          '&:hover': {
+            backgroundColor: PRIMARY_MAIN, // Darken on hover can be done via darken() utility from MUI
+            boxShadow: '0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)', // Subtle hover shadow
+          },
+        },
+        outlinedPrimary: {
+            borderColor: PRIMARY_MAIN,
+            '&:hover': {
+                backgroundColor: 'rgba(10, 115, 102, 0.04)', // Primary color with low opacity
+                borderColor: PRIMARY_MAIN,
+            }
+        }
+      },
+    },
+    MuiCard: {
+      defaultProps: {
+        elevation: 0, // Use border instead of shadow for a flatter design if preferred
+      },
+      styleOverrides: {
+        root: {
+          // borderRadius: BORDER_RADIUS_VALUE, // Already set by shape.borderRadius
+          border: '1px solid rgba(0, 0, 0, 0.08)', // Softer border than default elevation
+          // boxShadow: '0 4px 12px rgba(0,0,0,0.05)', // Example of a very subtle shadow
         },
       },
     },
     MuiPaper: {
-     styleOverrides: {
-       root: {
-         // backgroundColor: BACKGROUND_PAPER, // Default
-       },
-       elevation1: { // Example for Paper with elevation 1
-         boxShadow: '0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)',
-       }
-     }
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          // For Paper used as background, like in Dashboards
+          // backgroundColor: BACKGROUND_PAPER, // Handled by palette
+        },
+        outlined: { // Style for Paper variant="outlined"
+            border: `1px solid rgba(0, 0, 0, 0.08)`,
+        }
+      }
     },
     MuiTextField: {
-     defaultProps: {
-       variant: 'outlined', // Prefer outlined text fields
-     },
-     styleOverrides: {
-       root: {
-         // Custom styles for text fields if needed
-       }
-     }
+      defaultProps: {
+        variant: 'filled', // Filled can look more modern than outlined if styled well
+        InputLabelProps: { shrink: true } // Keep label always shrunk for filled variant
+      },
+      styleOverrides: {
+        root: {
+          '& .MuiFilledInput-root': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04)', // Lighter fill
+            borderRadius: BORDER_RADIUS_VALUE -4,
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.06)',
+            },
+            '&.Mui-focused': {
+              backgroundColor: 'rgba(0, 0, 0, 0.06)',
+            },
+            '&.Mui-disabled': {
+                backgroundColor: 'rgba(0, 0, 0, 0.02)',
+            }
+          },
+          '& .MuiFilledInput-underline:before': { // Remove underline for filled
+            borderBottom: 'none',
+          },
+          '& .MuiFilledInput-underline:after': { // Remove underline for filled on focus
+            borderBottom: 'none',
+          },
+        },
+      },
     },
     MuiTab: {
-     styleOverrides: {
-       root: {
-         textTransform: 'none', // Keep tab labels normal case
-         fontWeight: 500,
-       }
-     }
+      styleOverrides: {
+        root: {
+          // textTransform: 'none', // in typography.button
+          fontWeight: 600,
+          borderRadius: `${BORDER_RADIUS_VALUE - 4}px ${BORDER_RADIUS_VALUE - 4}px 0 0`, // Rounded top corners for tabs
+          '&.Mui-selected': {
+            color: PRIMARY_MAIN,
+          },
+        },
+      },
+    },
+    MuiTabs: {
+        styleOverrides: {
+            indicator: {
+                backgroundColor: PRIMARY_MAIN,
+                height: '3px',
+            }
+        }
+    },
+    MuiChip: {
+        styleOverrides: {
+            root: {
+                borderRadius: BORDER_RADIUS_VALUE / 2,
+                fontWeight: 500,
+            }
+        }
     },
     MuiDialog: {
-     styleOverrides: {
-       paper: {
-         borderRadius: BORDER_RADIUS,
-       }
-     }
+        styleOverrides: {
+            paper: {
+                // borderRadius: BORDER_RADIUS_VALUE, // from shape.borderRadius
+            }
+        }
     },
     MuiMenu: {
-     styleOverrides: {
-       paper: {
-         borderRadius: BORDER_RADIUS,
-         boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
-       }
-     }
+        styleOverrides: {
+            paper: {
+                // borderRadius: BORDER_RADIUS_VALUE, // from shape.borderRadius
+                boxShadow: '0 5px 15px rgba(0,0,0,0.1)', // Softer, more modern menu shadow
+            }
+        }
     },
     MuiAccordion: {
-     styleOverrides: {
-       root: {
-         boxShadow: 'none',
-         '&:before': {
-           display: 'none', // Remove the default top border on accordions
-         },
-         // '&.$expanded': { // This SASS-like syntax might not work directly here. Use specific class or structure.
-         //   margin: 'auto',
-         // },
-       },
-       rounded: { // ensure rounded prop applies custom radius
-         borderRadius: BORDER_RADIUS,
-         '&:first-of-type': {
-           borderTopLeftRadius: BORDER_RADIUS,
-           borderTopRightRadius: BORDER_RADIUS,
-         },
-         '&:last-of-type': {
-           borderBottomLeftRadius: BORDER_RADIUS,
-           borderBottomRightRadius: BORDER_RADIUS,
-         },
-       }
-     }
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          border: `1px solid rgba(0, 0, 0, 0.08)`,
+          // borderRadius: BORDER_RADIUS_VALUE, // from shape.borderRadius
+          '&:before': {
+            display: 'none',
+          },
+          // Spacing between accordions if needed
+          // '&:not(:last-child)': {
+          //   marginBottom: '10px',
+          // },
+        },
+      },
+    },
+    MuiListItemText: {
+        styleOverrides: {
+            primary: {
+                fontWeight: 500,
+            }
+        }
     }
   },
 });

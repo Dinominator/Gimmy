@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllExercises } from '../services/exerciseService';
 import { Container, Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
-// import { Link as RouterLink } from 'react-router-dom'; // For linking to a detailed page later
-import ExerciseCard from '../components/ExerciseCard'; // Import the refactored component
+import ExerciseCard from '../components/ExerciseCard';
 
 const AllExercisesPage = () => {
   const [exercises, setExercises] = useState([]);
@@ -28,37 +27,39 @@ const AllExercisesPage = () => {
 
   if (loading) {
     return (
-      <Container sx={{ py: 4, display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)', p:3 }}>
         <CircularProgress />
-      </Container>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container sx={{ py: 4 }}>
-        <Alert severity="error">{error}</Alert>
+      <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="md"> {/* Centered error message area */}
+        <Alert severity="error" variant="filled">{error}</Alert> {/* Use filled variant for more emphasis */}
       </Container>
     );
   }
 
   if (exercises.length === 0) {
     return (
-      <Container sx={{ py: 4 }}>
-        <Typography variant="h6" align="center">No exercises found.</Typography>
+      <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="md">
+        <Typography variant="h6" align="center" color="text.secondary" sx={{p:2}}>
+          No exercises found at the moment.
+        </Typography>
       </Container>
     );
   }
 
   return (
-    <Container sx={{ py: 4 }} maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom align="center">
-        All Exercises
+    <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="lg"> {/* Responsive padding */}
+      <Typography variant="h2" component="h1" gutterBottom align="center" sx={{ mb: {xs:3, sm:4} }}>
+        Exercise Library
       </Typography>
       <Grid container spacing={3}>
         {exercises.map((exercise) => (
-          <Grid item key={exercise.id} xs={12} sm={6} md={4}>
-            <ExerciseCard exercise={exercise} />
+          <Grid item key={exercise.id} xs={12} sm={6} md={4} lg={3}> {/* Added lg={3} for 4 cards on large screens */}
+            <ExerciseCard exercise={exercise} /> {/* showActions will default to false */}
           </Grid>
         ))}
       </Grid>

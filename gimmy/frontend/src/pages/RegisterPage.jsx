@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, CircularProgress, Paper, Divider, Alert } from '@mui/material';
+import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container, CircularProgress, Paper, Alert, Divider } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -14,7 +14,6 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    // role: 'trainee', // Role is fixed to trainee
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,10 +40,9 @@ export default function RegisterPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: 'trainee' // Always register as trainee
+        role: 'trainee'
       };
-      const userData = await register(registrationData);
-      // Assuming role will be 'trainee', navigate to trainee dashboard
+      await register(registrationData);
       navigate('/trainee/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
@@ -58,7 +56,6 @@ export default function RegisterPage() {
     setError('');
     try {
       await appGoogleLogin(tokenResponse.credential, 'trainee');
-      // Assuming role will be 'trainee', navigate to trainee dashboard
       navigate('/trainee/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Google Sign-Up failed.');
@@ -68,24 +65,24 @@ export default function RegisterPage() {
   };
 
   const handleGoogleError = (errorResponse) => {
-    console.error('Google Sign-In Error:', errorResponse);
+    console.error('Google Sign-Up Error:', errorResponse);
     setError('Google Sign-Up failed. Please try again.');
     setGoogleLoading(false);
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      {/* CssBaseline is now in main.jsx */}
       <Box
         sx={{
-          minHeight: 'calc(100vh - 180px)', // Adjust for Navbar/Footer
+          minHeight: 'calc(100vh - 180px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          py: 4,
         }}
       >
-        <Paper elevation={3} sx={{ p: {xs: 2, sm: 3, md: 4}, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <Paper variant="outlined" sx={{ p: { xs: 2, sm: 4 }, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -96,16 +93,16 @@ export default function RegisterPage() {
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField fullWidth label="Full Name" name="name" required autoComplete="name" autoFocus value={formData.name} onChange={handleChange} disabled={loading || googleLoading} />
+                <TextField fullWidth label="Full Name" name="name" required autoComplete="name" autoFocus value={formData.name} onChange={handleChange} disabled={loading || googleLoading} InputLabelProps={{ shrink: true }} />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth label="Email Address" name="email" type="email" required autoComplete="email" value={formData.email} onChange={handleChange} disabled={loading || googleLoading} />
+                <TextField fullWidth label="Email Address" name="email" type="email" required autoComplete="email" value={formData.email} onChange={handleChange} disabled={loading || googleLoading} InputLabelProps={{ shrink: true }} />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth label="Password" name="password" type="password" required autoComplete="new-password" value={formData.password} onChange={handleChange} disabled={loading || googleLoading} />
+                <TextField fullWidth label="Password" name="password" type="password" required autoComplete="new-password" value={formData.password} onChange={handleChange} disabled={loading || googleLoading} InputLabelProps={{ shrink: true }} />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth label="Confirm Password" name="confirmPassword" type="password" required autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} disabled={loading || googleLoading} />
+                <TextField fullWidth label="Confirm Password" name="confirmPassword" type="password" required autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} disabled={loading || googleLoading} InputLabelProps={{ shrink: true }} />
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 1 }} disabled={loading || googleLoading}>
@@ -117,12 +114,10 @@ export default function RegisterPage() {
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
-                  useOneTap
+                  // useOneTap // Temporarily removed
                   shape="rectangular"
                   theme="outline"
-                  logo_alignment="left"
                   text="signup_with"
-                  width="100%"
                 />
               }
             </Box>

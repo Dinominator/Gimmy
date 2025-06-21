@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, CircularProgress, Paper, Divider, Alert } from '@mui/material';
+import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container, CircularProgress, Paper, Alert, Divider } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -52,17 +52,17 @@ export default function LoginPage() {
 
   return (
     <Container component="main" maxWidth="xs">
-      {/* CssBaseline is now in main.jsx with ThemeProvider */}
       <Box
         sx={{
-          minHeight: 'calc(100vh - 180px)', // Adjust based on Navbar/Footer height
+          minHeight: 'calc(100vh - 180px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          py: 4,
         }}
       >
-        <Paper elevation={3} sx={{ p: {xs: 2, sm: 3, md: 4}, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <Paper variant="outlined" sx={{ p: { xs: 2, sm: 4 }, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -74,12 +74,12 @@ export default function LoginPage() {
             <TextField
               margin="normal" required fullWidth id="email" label="Email Address" name="email"
               autoComplete="email" autoFocus value={formData.email} onChange={handleChange}
-              disabled={loading || googleLoading}
+              disabled={loading || googleLoading} InputLabelProps={{ shrink: true }}
             />
             <TextField
               margin="normal" required fullWidth name="password" label="Password" type="password" id="password"
               autoComplete="current-password" value={formData.password} onChange={handleChange}
-              disabled={loading || googleLoading}
+              disabled={loading || googleLoading} InputLabelProps={{ shrink: true }}
             />
             <Button
               onClick={() => handleLoginAttempt(false)} fullWidth variant="contained"
@@ -88,29 +88,24 @@ export default function LoginPage() {
               {loading && !googleLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In as Trainee'}
             </Button>
             <Divider sx={{ my: 2 }}>OR</Divider>
-            {/* GoogleLogin Button */}
             <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 2 }}>
               {googleLoading ? <CircularProgress /> :
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
-                  useOneTap
+                  // useOneTap // Temporarily removed
                   shape="rectangular"
                   theme="outline"
-                  logo_alignment="left"
                   text="signin_with"
-                  width="100%" // Make Google button take full width
                 />
               }
             </Box>
-            {/* Trainer Login Button - Moved below Google Sign In */}
             <Button
               onClick={() => handleLoginAttempt(true)} fullWidth variant="outlined"
               sx={{ mb: 2 }} disabled={loading || googleLoading}
             >
               {loading && !googleLoading ? <CircularProgress size={24} /> : 'Login as Trainer'}
             </Button>
-
             <Grid container justifyContent="flex-end">
                 <Grid item>
                     <Link component={RouterLink} to="/register" variant="body2">
