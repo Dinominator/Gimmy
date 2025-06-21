@@ -26,6 +26,15 @@ export default function RegisterPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
+
++    if (!formData.name.trim()) {
++      setError("Full Name is required.");
++      return;
++    }
++    if (!formData.email.trim()) {
++      setError("Email Address is required.");
++      return;
++    }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match.");
       return;

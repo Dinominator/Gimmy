@@ -14,6 +14,10 @@ const generateToken = (uid) => {
 const registerUser = async (req, res) => {
   const { email, password, name, role } = req.body; // role can be 'trainer' or 'trainee'
 
+  // Log the received body for debugging
+  console.log('Attempting to register user. Received body:', { email: req.body.email, name: req.body.name, role: req.body.role, passwordProvided: !!req.body.password });
+
+
   if (!email || !password || !name || !role) {
     return res.status(400).json({ message: 'Please provide email, password, name, and role (trainer/trainee)' });
   }
