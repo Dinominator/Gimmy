@@ -17,7 +17,14 @@ import NotFoundPage from './pages/NotFoundPage';
 const ProtectedRoute = ({ children, roles }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>; // Or a spinner
+  if (loading) {
+    // Consistent full page centered loader for protected route check
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 120px)' /* Adjust height considering navbar/footer */ }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
