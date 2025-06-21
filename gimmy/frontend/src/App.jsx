@@ -2,6 +2,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { Typography, CircularProgress } from '@mui/material'; // Added Typography, CircularProgress
 
 // Import Page Components
 import HomePage from './pages/HomePage';
@@ -35,6 +36,7 @@ const ProtectedRoute = ({ children, roles }) => {
 import Navbar from './components/layout/Navbar'; // Import Navbar
 
 import { Container, Box } from '@mui/material'; // Import Container and Box
+// Typography and CircularProgress are already imported above
 
 const MainLayout = ({ children }) => (
   <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -55,7 +57,12 @@ function App() {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
-      return <div>Application Loading...</div>; // Full page loader
+    // Centered full page loader
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
