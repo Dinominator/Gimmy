@@ -7,7 +7,7 @@ import { searchTrainees as searchTraineesService, sendConnectionRequest as sendR
 import ExerciseCard from '../components/ExerciseCard';
 import AddExerciseModal from '../components/AddExerciseModal';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { Container, Typography, Grid, Button, CircularProgress, Alert, TextField, Box, Paper, List, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton, Divider, Tabs, Tab, Card, CardContent } from '@mui/material'; // Added Card, CardContent
+import { Container, Typography, Grid, Button, CircularProgress, Alert, TextField, Box, Paper, List, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton, Divider, Tabs, Tab, Card, CardContent } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import SendIcon from '@mui/icons-material/Send';
@@ -23,12 +23,12 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
     <div role="tabpanel" hidden={value !== index} id={`trainer-tabpanel-${index}`} aria-labelledby={`trainer-tab-${index}`} {...other}>
-      {value === index && (<Box sx={{ pt:3, pb:3 }}>{children}</Box>)}
+      {value === index && (<Box sx={{ pt:2, pb:3 }}>{children}</Box>)} {/* Adjusted padding */}
     </div>
   );
 }
 
-// Dummy/Placeholder functions - these would be expanded in future subtasks
+// Dummy/Placeholder functions
 const handleOpenTraineeHistoryModal = (trainee) => { alert(`View history for ${trainee.name} - TBD`); };
 const changeWeek = (offset) => { alert(`Change week by ${offset} - TBD`);};
 const handleOpenAddExerciseToPlanModal = (date) => { alert(`Add exercise to plan for ${date} - TBD`);};
@@ -62,27 +62,18 @@ const TrainerDashboardPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const [selectedTraineeForPlan, setSelectedTraineeForPlan] = useState(null);
-  const [currentWeekStartDate, setCurrentWeekStartDate] = useState(new Date().toISOString().split('T')[0]); // Example
+  const [currentWeekStartDate, setCurrentWeekStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [planLoading, setPlanLoading] = useState(false);
   const [planError, setPlanError] = useState('');
   const [isPlanUnchanged, setIsPlanUnchanged] = useState(true);
-  const [daysOfWeek, setDaysOfWeek] = useState([ // Example structure, should be dynamic
-    { name: 'Monday', date: '2024-07-29', exercises: [] },
-    { name: 'Tuesday', date: '2024-07-30', exercises: [] },
-    { name: 'Wednesday', date: '2024-07-31', exercises: [] },
-    { name: 'Thursday', date: '2024-08-01', exercises: [] },
-    { name: 'Friday', date: '2024-08-02', exercises: [] },
-    { name: 'Saturday', date: '2024-08-03', exercises: [] },
+  const [daysOfWeek, setDaysOfWeek] = useState([
+    { name: 'Monday', date: '2024-07-29', exercises: [] }, { name: 'Tuesday', date: '2024-07-30', exercises: [] },
+    { name: 'Wednesday', date: '2024-07-31', exercises: [] }, { name: 'Thursday', date: '2024-08-01', exercises: [] },
+    { name: 'Friday', date: '2024-08-02', exercises: [] }, { name: 'Saturday', date: '2024-08-03', exercises: [] },
     { name: 'Sunday', date: '2024-08-04', exercises: [] },
   ]);
 
-
-  const handleTabChange = (event, newValue) => {
-    setCurrentTab(newValue);
-    if (newValue !== 3 && selectedTraineeForPlan) { // If navigating away from plans tab and a trainee was selected
-        // setSelectedTraineeForPlan(null); // Optional: clear selected trainee
-    }
-  };
+  const handleTabChange = (event, newValue) => { setCurrentTab(newValue); };
 
   const fetchTrainerExercises = useCallback(async () => {
     if (!user) return;
@@ -108,8 +99,7 @@ const TrainerDashboardPage = () => {
   };
 
   const openDeleteExerciseConfirm = (exerciseId) => {
-      setConfirmTitle('Delete Exercise');
-      setConfirmMessage('Are you sure you want to delete this exercise?');
+      setConfirmTitle('Delete Exercise'); setConfirmMessage('Are you sure you want to delete this exercise?');
       setConfirmAction(() => async () => {
           try { await deleteExerciseService(exerciseId); fetchTrainerExercises(); }
           catch (err) { setExerciseError(err.message || 'Failed to delete exercise.');}
@@ -119,9 +109,8 @@ const TrainerDashboardPage = () => {
 
   const fetchConnectedTrainees = useCallback(async () => {
     setTraineesLoading(true); setTraineesError('');
-    try {
-      const data = await getConnectedTraineesService(); setConnectedTrainees(data);
-    } catch (err) { setTraineesError(err.message || 'Failed to fetch connected trainees.');}
+    try { const data = await getConnectedTraineesService(); setConnectedTrainees(data); }
+    catch (err) { setTraineesError(err.message || 'Failed to fetch connected trainees.');}
     finally { setTraineesLoading(false); }
   }, []);
 
@@ -142,8 +131,7 @@ const TrainerDashboardPage = () => {
   };
 
   const openSendRequestConfirm = (trainee) => {
-      setConfirmTitle('Send Connection Request');
-      setConfirmMessage(`Send connection request to ${trainee.name}?`);
+      setConfirmTitle('Send Connection Request'); setConfirmMessage(`Send connection request to ${trainee.name}?`);
       setConfirmAction(() => async () => {
           setSentRequests(prev => ({ ...prev, [trainee.id]: 'sending' }));
           try { await sendRequestService(trainee.id); setSentRequests(prev => ({ ...prev, [trainee.id]: 'sent' })); }
@@ -153,8 +141,7 @@ const TrainerDashboardPage = () => {
   };
 
   const openRemoveTraineeConfirm = (trainee) => {
-      setConfirmTitle('Remove Trainee');
-      setConfirmMessage(`Remove ${trainee.name} from your trainees?`);
+      setConfirmTitle('Remove Trainee'); setConfirmMessage(`Remove ${trainee.name} from your trainees?`);
       setConfirmAction(() => async () => {
           try { await removeTraineeConnection(trainee.connectionId); fetchConnectedTrainees(); }
           catch (err) { setTraineesError(err.message || 'Failed to remove trainee.'); }
@@ -162,26 +149,13 @@ const TrainerDashboardPage = () => {
       setConfirmOpen(true);
   };
 
-  const handleConfirm = async () => {
-      if (confirmAction) await confirmAction();
-      setConfirmOpen(false); setConfirmAction(null);
-  };
-
+  const handleConfirm = async () => { if (confirmAction) await confirmAction(); setConfirmOpen(false); setConfirmAction(null); };
   const isAlreadyConnected = (traineeId) => connectedTrainees.some(t => t.id === traineeId);
-
-  const handleManageTraineePlan = (trainee) => {
-    setSelectedTraineeForPlan(trainee);
-    // TODO: Fetch actual plan for this trainee and week
-    // For now, it will just show the placeholder daysOfWeek or an empty state
-    setPlanError(''); // Clear previous plan errors
-    setPlanLoading(true); // Simulate loading
-    setTimeout(() => setPlanLoading(false), 500); // Simulate API call
-    setCurrentTab(3);
-  };
+  const handleManageTraineePlan = (trainee) => { setSelectedTraineeForPlan(trainee); setCurrentTab(3); setPlanError(''); setPlanLoading(true); setTimeout(() => setPlanLoading(false), 500); };
 
   return (
     <Container sx={{ py: { xs: 2, sm: 3 } }} maxWidth="lg">
-      <Typography variant="h3" component="h1" sx={{ mb: { xs: 2, sm: 3 } }}>Trainer Dashboard</Typography>
+      <Typography variant="h2" component="h1" sx={{ mb: { xs: 2, sm: 4 } }}>Trainer Dashboard</Typography>
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 0 }}>
         <Tabs value={currentTab} onChange={handleTabChange} aria-label="trainer dashboard tabs" variant="scrollable" scrollButtons="auto">
@@ -195,12 +169,12 @@ const TrainerDashboardPage = () => {
       <ConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} onConfirm={handleConfirm} title={confirmTitle} message={confirmMessage}/>
 
       <TabPanel value={currentTab} index={0}>
-        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:2, md:3} }}>
-          <Box sx={{ mb: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap:'wrap', gap: 1 }}>
-            <Typography variant="h5" component="h2">My Created Exercises</Typography>
+        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:3, md:4} }}>
+          <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap:'wrap', gap: 2 }}>
+            <Typography variant="h4" component="h2">My Created Exercises</Typography>
             <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenExerciseModal()}>Add New Exercise</Button>
           </Box>
-          {exerciseError && <Alert severity="error" sx={{ mb: 2 }}>{exerciseError}</Alert>}
+          {exerciseError && <Alert severity="error" sx={{ mb: 2 }} variant="filled">{exerciseError}</Alert>}
           {exerciseLoading && myExercises.length === 0 && <Box sx={{display:'flex', justifyContent:'center', p:3}}><CircularProgress /></Box>}
           {!exerciseLoading && !exerciseError && myExercises.length === 0 && <Typography sx={{p:3, textAlign:'center', color:'text.secondary'}}>You haven't added any exercises yet.</Typography>}
           <Grid container spacing={3}>
@@ -215,26 +189,21 @@ const TrainerDashboardPage = () => {
       </TabPanel>
 
       <TabPanel value={currentTab} index={1}>
-        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:2, md:3} }}>
-          <Typography variant="h5" component="h2" gutterBottom>My Connected Trainees</Typography>
-          {traineesError && <Alert severity="error" sx={{mb:2}}>{traineesError}</Alert>}
+        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:3, md:4} }}>
+          <Typography variant="h4" component="h2" gutterBottom>My Connected Trainees</Typography>
+          {traineesError && <Alert severity="error" sx={{mb:2}} variant="filled">{traineesError}</Alert>}
           {traineesLoading && <Box sx={{display:'flex', justifyContent:'center', p:3}}><CircularProgress /></Box>}
-          {!traineesLoading && !traineesError && connectedTrainees.length === 0 && <Typography sx={{p:3, textAlign:'center', color:'text.secondary'}}>You have no connected trainees yet. Use the "Search Trainees" tab.</Typography>}
+          {!traineesLoading && !traineesError && connectedTrainees.length === 0 && <Typography sx={{p:3, textAlign:'center', color:'text.secondary'}}>You have no connected trainees yet.</Typography>}
           <List sx={{width: '100%'}}>
             {connectedTrainees.map(trainee => (
-              <Card key={trainee.id} sx={{mb:1.5}} variant="outlined">
+              <Card key={trainee.id} sx={{mb:2}} variant="outlined">
                 <ListItem
                   secondaryAction={
-                    <>
-                      <IconButton edge="end" aria-label="manage-plan" title="Manage Training Plans" onClick={() => handleManageTraineePlan(trainee)}>
-                          <EditCalendarIcon />
-                      </IconButton>
-                      <IconButton edge="end" aria-label="delete-connection" title="Remove Trainee" onClick={() => openRemoveTraineeConfirm(trainee)}>
-                          <DeleteIcon />
-                      </IconButton>
-                    </>
-                  }
-                >
+                    <Box>
+                      <IconButton edge="end" aria-label="manage-plan" title="Manage Training Plans" onClick={() => handleManageTraineePlan(trainee)} sx={{mr:0.5}}> <EditCalendarIcon /> </IconButton>
+                      <IconButton edge="end" aria-label="delete-connection" title="Remove Trainee" onClick={() => openRemoveTraineeConfirm(trainee)}> <DeleteIcon /> </IconButton>
+                    </Box>
+                  }>
                   <ListItemAvatar><Avatar src={trainee.photoURL || undefined} /></ListItemAvatar>
                   <ListItemText primary={trainee.name} secondary={trainee.email} />
                 </ListItem>
@@ -245,14 +214,14 @@ const TrainerDashboardPage = () => {
       </TabPanel>
 
       <TabPanel value={currentTab} index={2}>
-        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:2, md:3} }}>
-          <Typography variant="h5" component="h2" gutterBottom>Search for New Trainees</Typography>
-          <Box component="form" onSubmit={handleSearchTrainees} sx={{ display: 'flex', alignItems: 'center', mb: 2.5 }}>
-            <TextField fullWidth label="Search by name or email" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} size="small"/>
-            <Button type="submit" variant="contained" sx={{ ml: 1, p: '8px' }} disabled={searchLoading} aria-label="Search"> <PersonSearchIcon /> </Button>
+        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:3, md:4} }}>
+          <Typography variant="h4" component="h2" gutterBottom>Search for New Trainees</Typography>
+          <Box component="form" onSubmit={handleSearchTrainees} sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <TextField fullWidth label="Search by name or email" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} size="small" InputLabelProps={{ shrink: true }}/>
+            <Button type="submit" variant="contained" sx={{ ml: 1.5, p: '8px 16px' }} disabled={searchLoading} aria-label="Search"> <PersonSearchIcon /> </Button>
           </Box>
           {searchLoading && <Box sx={{display:'flex', justifyContent:'center', p:3}}><CircularProgress /></Box>}
-          {searchError && <Alert severity={searchResults.length > 0 ? "info" : "warning"} sx={{mt:1, mb:2}}>{searchError}</Alert>}
+          {searchError && <Alert severity={searchResults.length > 0 ? "info" : "warning"} sx={{mt:1, mb:2}} variant="filled">{searchError}</Alert>}
           <List sx={{width: '100%'}}>
             {searchResults.map(trainee => (
               <Card key={trainee.id} sx={{mb:1.5}} variant="outlined">
@@ -275,52 +244,52 @@ const TrainerDashboardPage = () => {
       </TabPanel>
 
       <TabPanel value={currentTab} index={3}>
-        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:2, md:3} }}>
+        <Paper variant="outlined" sx={{ p: {xs:1.5, sm:3, md:4} }}>
           {!selectedTraineeForPlan ? (
               <Box sx={{textAlign:'center', p:3}}>
-                <Typography variant="h6" component="h2" gutterBottom>Manage Training Plans</Typography>
-                <Typography color="text.secondary">Select a trainee from the "My Trainees" tab by clicking the <EditCalendarIcon sx={{verticalAlign:'middle', mx:0.5, fontSize:'1.1em'}}/> icon to manage their training plan.</Typography>
+                <Typography variant="h5" component="h2" gutterBottom>Manage Training Plans</Typography>
+                <Typography color="text.secondary">Select a trainee from "My Trainees" tab by clicking the <EditCalendarIcon sx={{verticalAlign:'middle', mx:0.5, fontSize:'1.2em'}}/> icon to manage their plan.</Typography>
               </Box>
           ) : (
           <>
-              <Typography variant="h5" component="h2" gutterBottom>Plan for: {selectedTraineeForPlan.name}</Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5, flexWrap:'wrap', gap:1 }}>
-                  <Typography variant="h6" component="h3" sx={{mb: {xs:1, sm:0}}}>{`Week of ${new Date(currentWeekStartDate).toLocaleDateString()}`}</Typography>
+              <Typography variant="h4" component="h2" gutterBottom>Plan for: {selectedTraineeForPlan.name}</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap:'wrap', gap:1 }}>
+                  <Typography variant="h5" component="h3" sx={{mb: {xs:1, sm:0}}}>{`Week of ${new Date(currentWeekStartDate).toLocaleDateString()}`}</Typography>
                   <Box>
-                      <IconButton onClick={() => changeWeek(-1)} aria-label="Previous Week" size="small"><ArrowBackIosNewIcon fontSize="inherit"/></IconButton>
-                      <IconButton onClick={() => changeWeek(1)} aria-label="Next Week" size="small"><ArrowForwardIosIcon fontSize="inherit"/></IconButton>
-                      <Button startIcon={<HistoryEduIcon />} onClick={() => handleOpenTraineeHistoryModal(selectedTraineeForPlan)} sx={{ ml: 1 }} size="small">View History</Button>
+                      <IconButton onClick={() => changeWeek(-1)} aria-label="Previous Week" size="medium"><ArrowBackIosNewIcon fontSize="small"/></IconButton>
+                      <IconButton onClick={() => changeWeek(1)} aria-label="Next Week" size="medium"><ArrowForwardIosIcon fontSize="small"/></IconButton>
+                      <Button startIcon={<HistoryEduIcon />} onClick={() => handleOpenTraineeHistoryModal(selectedTraineeForPlan)} sx={{ ml: 1 }}>View History</Button>
                   </Box>
               </Box>
 
               {planLoading && <Box sx={{display:'flex', justifyContent:'center', p:3}}><CircularProgress /></Box>}
-              {planError && <Alert severity="error" sx={{mb:2}}>{planError}</Alert>}
+              {planError && <Alert severity="error" sx={{mb:2}} variant="filled">{planError}</Alert>}
 
-              <Grid container spacing={2}>
+              <Grid container spacing={2.5}> {/* Increased spacing slightly */}
                   {daysOfWeek.map((day, index) => (
                       <Grid item xs={12} md={6} lg={4} key={index}>
                           <Card variant="outlined" sx={{height: '100%', display:'flex', flexDirection:'column'}}>
-                              <CardContent sx={{flexGrow:1}}>
-                                  <Typography variant="subtitle1" gutterBottom sx={{fontWeight:'bold'}}>{day.name} ({new Date(day.date).toLocaleDateString(undefined, {month:'short', day:'numeric'})})</Typography>
+                              <CardContent sx={{flexGrow:1, p: 2}}>
+                                  <Typography variant="h6" component="div" gutterBottom>{day.name} <Typography variant="caption" color="text.secondary">({new Date(day.date).toLocaleDateString(undefined, {month:'short', day:'numeric'})})</Typography></Typography>
                                   {!planLoading && day.exercises.length === 0 ? (
-                                       <Typography variant="body2" color="text.secondary" sx={{minHeight: '3em', display:'flex', alignItems:'center', justifyContent:'center'}}>No exercises assigned.</Typography>
+                                       <Typography variant="body2" color="text.secondary" sx={{minHeight: '3.5em', display:'flex', alignItems:'center', justifyContent:'center', p:1}}>No exercises assigned.</Typography>
                                   ) : (
                                   <List dense>
-                                      {day.exercises.map((ex, exIdx) => ( // Replace with actual exercise data
-                                          <ListItem key={exIdx} disablePadding>
+                                      {day.exercises.map((ex, exIdx) => (
+                                          <ListItem key={exIdx} disablePadding sx={{mb:0.5}}>
                                               <ListItemText primary={ex.exerciseName || ex.name} secondary={`${ex.sets} sets x ${ex.reps} reps`} />
                                           </ListItem>
                                       ))}
                                   </List>
                                   )}
                                   </CardContent>
-                                  <Button fullWidth variant="text" size="small" sx={{mt:'auto', color:'text.secondary', borderTop: (theme) => `1px solid ${theme.palette.divider}`}} onClick={() => handleOpenAddExerciseToPlanModal(day.date)}>+ Add Exercise</Button>
+                                  <Button fullWidth variant="text" size="small" sx={{mt:'auto', py: 1.5, color:'text.secondary', borderTop: (theme) => `1px solid ${theme.palette.divider}`}} onClick={() => handleOpenAddExerciseToPlanModal(day.date)}>+ Add Exercise to Day</Button>
                           </Card>
                       </Grid>
                   ))}
               </Grid>
               <Button variant="contained" color="primary" sx={{mt:3}} onClick={handleSaveCurrentPlan} disabled={planLoading || isPlanUnchanged}>
-                  {planLoading ? <CircularProgress size={24} color="inherit"/> : "Save Current Week's Plan"}
+                  {planLoading ? <CircularProgress size={24} color="inherit"/> : "Save Week's Plan"}
               </Button>
           </>
           )}

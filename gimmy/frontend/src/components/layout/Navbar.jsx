@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, IconButton, Badge, Menu, MenuItem, Divider, Box, ListItemIcon, ListItemText, CircularProgress, Tooltip, Typography, Avatar } from '@mui/material'; // Added Typography, Avatar
 import NotificationsIcon from '@mui/icons-material/Notifications';
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // AccountCircleIcon is available, but Avatar with initial is used
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Ensure AccountCircleIcon is imported
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import GimmyLogo from '../GimmyLogo'; // Import the new logo component
 import { useAuth } from '../../contexts/AuthContext';

@@ -1,6 +1,6 @@
 // src/pages/AllExercisesPage.jsx
 import React, { useEffect, useState } from 'react';
-import { getAllExercises } from '../services/exerciseService';
+import { getAllExercises } from '../services/exerciseService'; // Corrected path
 import { Container, Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
 import ExerciseCard from '../components/ExerciseCard';
 
@@ -35,8 +35,8 @@ const AllExercisesPage = () => {
 
   if (error) {
     return (
-      <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="md"> {/* Centered error message area */}
-        <Alert severity="error" variant="filled">{error}</Alert> {/* Use filled variant for more emphasis */}
+      <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="md">
+        <Alert severity="error" variant="filled">{error}</Alert>
       </Container>
     );
   }
@@ -52,14 +52,14 @@ const AllExercisesPage = () => {
   }
 
   return (
-    <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="lg"> {/* Responsive padding */}
-      <Typography variant="h2" component="h1" gutterBottom align="center" sx={{ mb: {xs:3, sm:4} }}>
+    <Container sx={{ py: { xs: 2, sm: 4 } }} maxWidth="lg">
+      <Typography variant="h1" component="h1" gutterBottom align="center" sx={{ mb: {xs:3, sm:5} }}>
         Exercise Library
       </Typography>
       <Grid container spacing={3}>
         {exercises.map((exercise) => (
-          <Grid item key={exercise.id} xs={12} sm={6} md={4} lg={3}> {/* Added lg={3} for 4 cards on large screens */}
-            <ExerciseCard exercise={exercise} /> {/* showActions will default to false */}
+          <Grid item key={exercise.id} xs={12} sm={6} md={4} lg={3}>
+            <ExerciseCard exercise={exercise} />
           </Grid>
         ))}
       </Grid>
