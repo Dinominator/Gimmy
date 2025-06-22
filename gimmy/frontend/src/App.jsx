@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AllExercisesPage from './pages/AllExercisesPage';
+import ExerciseDetailPage from './pages/ExerciseDetailPage'; // Added ExerciseDetailPage
 import TrainerDashboardPage from './pages/TrainerDashboardPage';
 import TraineeDashboardPage from './pages/TraineeDashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -79,7 +80,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to={user?.role === 'trainer' ? '/trainer/dashboard' : '/trainee/dashboard'} /> : <LoginPage />} />
         <Route path="/register" element={isAuthenticated ? <Navigate to={user?.role === 'trainer' ? '/trainer/dashboard' : '/trainee/dashboard'} /> : <RegisterPage />} />
+
+        {/* Exercise Routes */}
         <Route path="/exercises" element={<AllExercisesPage />} />
+        <Route path="/exercises/:exerciseId" element={<ExerciseDetailPage />} />
 
         {/* Protected Routes for Trainer */}
         <Route

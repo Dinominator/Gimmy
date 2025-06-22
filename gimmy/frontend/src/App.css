@@ -1,8 +1,10 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* max-width: 1280px; /* Removed to allow full width */
+  /* margin: 0 auto; /* Removed for full width */
+  /* padding: 2rem; /* Removed as MainLayout Container handles padding */
+  /* text-align: center; /* Removed as specific components should handle text alignment */
+  /* Ensure it takes full width and height if necessary, though body and MainLayout should handle this */
+  width: 100%;
 }
 
 .logo {

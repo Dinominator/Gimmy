@@ -13,9 +13,6 @@ const HomePage = () => {
         Your ultimate remote fitness training management solution.
       </Typography>
       <Box sx={{ mt: 4 }}>
-        <Button component={RouterLink} to="/exercises" variant="contained" color="primary" sx={{ mr: 2 }}>
-          Browse All Exercises
-        </Button>
         <Button component={RouterLink} to="/register" variant="outlined" color="primary" sx={{ mr: 2 }}>
           Sign Up
         </Button>

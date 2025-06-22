@@ -1,6 +1,7 @@
 // src/components/ExerciseCard.jsx
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Box, IconButton } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Card, CardContent, CardMedia, Typography, Box, IconButton, Link } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -18,7 +19,9 @@ const ExerciseCard = ({ exercise, showActions = false, onEdit, onDelete }) => {
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="div">
-          {exercise.name}
+          <Link component={RouterLink} to={`/exercises/${exercise.id}`} sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { textDecoration: 'underline' } }}>
+            {exercise.name}
+          </Link>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           Author: {exercise.authorName || 'N/A'} {/* Ensure authorName is part of exercise object */}
